@@ -43,6 +43,20 @@ module Nokogiri
           assert_equal [['foo', [['a', '&b']]]], doc.start_elements
         end
 
+        def test_keep_entities
+          doc = Doc.new
+          parser = XML::SAX::Parser.new doc
+          parser.parse(File.read(XML_FILE)) {|ctx| ctx.replace_entities = false }
+          assert_equal ["ent1", "ent2", "ent3", "ent4", "ent1", "ent2", "ent3", "ent4", "ent1"], doc.entities
+        end
+
+        def test_do_not_keep_entities
+          doc = Doc.new
+          parser = XML::SAX::Parser.new doc
+          parser.parse(File.read(XML_FILE)) {|ctx| ctx.replace_entities = true }
+          assert_nil doc.entities
+        end
+
         def test_xml_decl
           [
             ['', nil],

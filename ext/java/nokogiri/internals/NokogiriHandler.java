@@ -17,10 +17,10 @@
  * distribute, sublicense, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
@@ -57,7 +57,7 @@ import org.xml.sax.ext.DefaultHandler2;
 
 /**
  * A handler for SAX parsing.
- * 
+ *
  * @author sergio
  * @author Yoko Harada <yokolet@gmail.com>
  */
@@ -172,7 +172,7 @@ public class NokogiriHandler extends DefaultHandler2 implements XmlDeclHandler {
                         args[1] = stringOrNil(ruby, pre);
                         args[2] = stringOrNil(ruby, u);
                     }
-                } 
+                }
                 if (args == null) {
                     args = new IRubyObject[4];
                     args[0] = stringOrNil(ruby, ln);
@@ -195,26 +195,26 @@ public class NokogiriHandler extends DefaultHandler2 implements XmlDeclHandler {
              rubyNSAttr);
         characterStack.push(new StringBuffer());
     }
-    
+
     private static String[] emptyAttrs =
-        {"checked", "compact", "declare", "defer", "disabled", "ismap", "multiple", 
+        {"checked", "compact", "declare", "defer", "disabled", "ismap", "multiple",
          "noresize", "nohref", "noshade", "nowrap", "readonly", "selected"};
-    
+
     private boolean isEmptyAttr(String name) {
         for (String emptyAttr : emptyAttrs) {
             if (emptyAttr.equals(name)) return true;
         }
         return false;
     }
-    
+
     public Integer getLine() {
         return locator.getLineNumber();
     }
-    
+
     public Integer getColumn() {
         return locator.getColumnNumber() - 1;
     }
-    
+
     private boolean isFromFragmentHandler() {
         if (object != null && object instanceof RubyObject) {
             RubyObject rubyObj = (RubyObject)object;
@@ -237,6 +237,11 @@ public class NokogiriHandler extends DefaultHandler2 implements XmlDeclHandler {
              stringOrNil(ruby, localName),
              stringOrNil(ruby, getPrefix(qName)),
              stringOrNil(ruby, uri));
+    }
+
+    @Override
+    public void startEntity(String name) throws SAXException {
+        call("get_entity", stringOrNil(ruby, name));
     }
 
     @Override
