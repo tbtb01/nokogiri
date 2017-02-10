@@ -435,6 +435,28 @@ XML
         assert_equal 1, sections.size
         assert_equal "[TEXT_INSIDE_SECTION]", sections.first.text
       end
+
+      def test_concurrent_xpath
+        skip("MRI doesn't have real threads") unless Nokogiri.jruby?
+        doc = Nokogiri::XML(File.open(XPATH_FILE))
+
+        threads = []; errors = []
+        4.times do |i|
+          threads << Thread.start do
+            begin
+              sleep 0.01 * i
+              assert_equal 11, doc.xpath('.//category').size
+              assert_equal 1165, doc.xpath('//module').size
+              assert_equal 10353, doc.xpath('//module/param').size
+              assert_equal 14, doc.xpath('//param[@name="href"]').size
+            rescue Exception => ex
+              errors << ex
+            end
+          end
+        end
+        threads.each(&:join)
+        raise errors.first if errors.any?
+      end
     end
   end
 end
