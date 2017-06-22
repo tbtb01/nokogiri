@@ -3,14 +3,7 @@ language: ruby
 sudo: false
 
 rvm:
-- 2.0
-- 2.1
-- 2.2.5
-- 2.3.1
-- 2.4.0
-- jruby-1.7
-- jruby
-- rbx
+- 2.4.1
 
 os:
 - linux
@@ -32,13 +25,3 @@ matrix:
     rvm: jruby
   - os: osx
     rvm: rbx
-
-notifications:
-  irc:
-    channels:
-      - "chat.freenode.net#nokogiri"
-    on_success: always
-    on_failure: always
-    template:
-      - "%{repository} (%{branch}:%{commit} by %{author}): %{message} (%{build_url})"
-    skip_join: true
